@@ -20,7 +20,7 @@ contract TnT_contract {
     event Transfer(address indexed from, address indexed to, uint value);
 
     constructor() public {
-        //nothing
+        _mint(msg.sender, 777 * 10 ** uint256(decimals));
     }
     //why are some internal and some private?
     function _mint(address to, uint value) internal {
