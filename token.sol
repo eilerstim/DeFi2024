@@ -11,7 +11,7 @@ contract LuckyCoin {
     string public constant symbol = "LUCK";
     uint8 public constant decimals = 10; 
     uint public totalSupply;
-    uint256 public transactionCount; // Amount of transactions since last draw
+    uint256 public transactionCount = 0; // Amount of transactions since last draw
     uint256 public constant lotteryThreshold = 10; // Amount of transaction to trigger a draw
     uint256 public constant lotteryFee = 10; // 10% fee for every transaction
     uint256 private _nonce = 0;
