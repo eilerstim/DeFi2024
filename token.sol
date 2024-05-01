@@ -1,69 +1,67 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity >=0.6.12;
+
+import './libraries/SafeMath.sol';
 
 contract ERC20 {
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(
-        address indexed owner, address indexed spender, uint256 value
-    );
+    using SafeMath for uint;
 
-    uint256 public totalSupply;
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-    string public name;
-    string public symbol;
-    uint8 public decimals;
+    string public constant name = 'Uniswap V2';
+    string public constant symbol = 'UNI-V2';
+    uint8 public constant decimals = 18;
+    uint  public  totalSupply;
+    mapping(address => uint) public  balanceOf;
+    mapping(address => mapping(address => uint)) public allowance;
 
-    constructor(string memory _name, string memory _symbol, uint8 _decimals) {
-        name = _name;
-        symbol = _symbol;
-        decimals = _decimals;
+    mapping(address => uint) public nonces;
+
+    event Approval(address indexed owner, address indexed spender, uint value);
+    event Transfer(address indexed from, address indexed to, uint value);
+
+    constructor() public{
+  
     }
 
-    function transfer(address recipient, uint256 amount)
-        external
-        returns (bool)
-    {
-        balanceOf[msg.sender] -= amount;
-        balanceOf[recipient] += amount;
-        emit Transfer(msg.sender, recipient, amount);
+    function _mint(address to, uint value) internal {
+        totalSupply = totalSupply.add(value);
+        balanceOf[to] = balanceOf[to].add(value);
+        emit Transfer(address(0), to, value);
+    }
+
+    function _burn(address from, uint value) internal {
+        balanceOf[from] = balanceOf[from].sub(value);
+        totalSupply = totalSupply.sub(value);
+        emit Transfer(from, address(0), value);
+    }
+
+    function _approve(address owner, address spender, uint value) private {
+        allowance[owner][spender] = value;
+        emit Approval(owner, spender, value);
+    }
+
+    function _transfer(address from, address to, uint value) private {
+        balanceOf[from] = balanceOf[from].sub(value);
+        balanceOf[to] = balanceOf[to].add(value);
+        emit Transfer(from, to, value);
+    }
+
+    function approve(address spender, uint value) external returns (bool) {
+        _approve(msg.sender, spender, value);
         return true;
     }
 
-    function approve(address spender, uint256 amount) external returns (bool) {
-        allowance[msg.sender][spender] = amount;
-        emit Approval(msg.sender, spender, amount);
+    function transfer(address to, uint value) external returns (bool) {
+        _transfer(msg.sender, to, value);
         return true;
     }
 
-    function transferFrom(address sender, address recipient, uint256 amount)
-        external
-        returns (bool)
-    {
-        allowance[sender][msg.sender] -= amount;
-        balanceOf[sender] -= amount;
-        balanceOf[recipient] += amount;
-        emit Transfer(sender, recipient, amount);
+    function transferFrom(address from, address to, uint value) external  returns (bool) {
+        if (allowance[from][msg.sender] != uint(-1)) {
+            allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
+        }
+        _transfer(from, to, value);
         return true;
     }
 
-    function _mint(address to, uint256 amount) internal {
-        balanceOf[to] += amount;
-        totalSupply += amount;
-        emit Transfer(address(0), to, amount);
-    }
-
-    function _burn(address from, uint256 amount) internal {
-        balanceOf[from] -= amount;
-        totalSupply -= amount;
-        emit Transfer(from, address(0), amount);
-    }
-
-    function mint(address to, uint256 amount) external {
-        _mint(to, amount);
-    }
-
-    function burn(address from, uint256 amount) external {
-        _burn(from, amount);
-    }
 }
