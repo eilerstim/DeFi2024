@@ -4,23 +4,25 @@ pragma solidity >=0.6.12;
 
 import "./libraries/SafeMath.sol";
 
-contract ERC20 {
+contract TnT_contract {
     using SafeMath for uint;
-
-    string public constant name = "Uniswap V2";
-    string public constant symbol = "UNI-V2";
-    uint8 public constant decimals = 18;
+    //public keysword for state variables creates public getter but not setter
+    string public constant name = "TnT";
+    string public constant symbol = "TnT";
+    uint8 public constant decimals = 10; //not in use
     uint public totalSupply;
     mapping(address => uint) public balanceOf;
     mapping(address => mapping(address => uint)) public allowance;
 
-    mapping(address => uint) public nonces;
+    //mapping(address => uint) public nonces; //?
 
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
-    constructor() public {}
-
+    constructor() public {
+        //nothing
+    }
+    //why are some internal and some private?
     function _mint(address to, uint value) internal {
         totalSupply = totalSupply.add(value);
         balanceOf[to] = balanceOf[to].add(value);
