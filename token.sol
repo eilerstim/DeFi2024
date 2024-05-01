@@ -2,16 +2,16 @@
 
 pragma solidity >=0.6.12;
 
-import './libraries/SafeMath.sol';
+import "./libraries/SafeMath.sol";
 
 contract ERC20 {
     using SafeMath for uint;
 
-    string public constant name = 'Uniswap V2';
-    string public constant symbol = 'UNI-V2';
+    string public constant name = "Uniswap V2";
+    string public constant symbol = "UNI-V2";
     uint8 public constant decimals = 18;
-    uint  public  totalSupply;
-    mapping(address => uint) public  balanceOf;
+    uint public totalSupply;
+    mapping(address => uint) public balanceOf;
     mapping(address => mapping(address => uint)) public allowance;
 
     mapping(address => uint) public nonces;
@@ -19,9 +19,7 @@ contract ERC20 {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
-    constructor() public{
-  
-    }
+    constructor() public {}
 
     function _mint(address to, uint value) internal {
         totalSupply = totalSupply.add(value);
@@ -56,12 +54,17 @@ contract ERC20 {
         return true;
     }
 
-    function transferFrom(address from, address to, uint value) external  returns (bool) {
+    function transferFrom(
+        address from,
+        address to,
+        uint value
+    ) external returns (bool) {
         if (allowance[from][msg.sender] != uint(-1)) {
-            allowance[from][msg.sender] = allowance[from][msg.sender].sub(value);
+            allowance[from][msg.sender] = allowance[from][msg.sender].sub(
+                value
+            );
         }
         _transfer(from, to, value);
         return true;
     }
-
 }
