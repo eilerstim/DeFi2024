@@ -92,7 +92,7 @@ contract LuckyCoin {
         return true;
     }
 
-    function lotteryDraw() internal {
+    function _drawLottery() internal {
         // Determine "random" index using hash function
         _nonce++;
         uint i = uint256(keccak256(abi.encodePacked(block.timestamp,msg.sender,_nonce))) % lotteryThreshold;
